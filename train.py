@@ -18,18 +18,19 @@ def main():
     val_size = train_val_size - train_size
     test_size = len(the_batches) - train_val_size
 
-    train_batches = the_batches[:train_size]
-    val_batches = the_batches[train_size:train_val_size]
-    test_batches = the_batches[train_val_size:]
 
     n_past = dataset_obsv.shape[1]  # Size of the observed sub-paths
     n_next = dataset_pred.shape[1]  # Size of the sub-paths to predict
 
+    print("LinearReg:")
     clf = LinearReg()
-    clf.fit(dataset_obsv, dataset_pred)
+    clf.fit(dataset_obsv[:train_val_size], dataset_pred[:train_val_size])
+    clf.score(dataset_obsv[train_val_size:], dataset_pred[train_val_size:])
 
+    print("LinearRegNorm:")
     clfNorm = LinearRegNorm()
-    clfNorm.fit(dataset_obsv, dataset_pred)
+    clfNorm.fit(dataset_obsv[:train_val_size], dataset_pred[:train_val_size])
+    clfNorm.score(dataset_obsv[train_val_size:], dataset_pred[train_val_size:])
 
     n_total_samples = the_batches[-1][1]
     n_train_samples = the_batches[train_size - 1][1]  # Number of training samples
