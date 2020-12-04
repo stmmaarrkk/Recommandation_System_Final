@@ -1,11 +1,22 @@
 from sklearn.metrics import mean_squared_error
+import numpy as np
+from utils.Preprocessing import Scale
 import math
 def RMSE(xPredict, yPredict, xTrue, yTrue, rawValue = False):
     Rx = mean_squared_error(xTrue, xPredict)
     Ry = mean_squared_error(yTrue, yPredict)
     return math.sqrt(Rx + Ry)
-def plotTrajectories():
-    pass
+def normalization(dataset_obsv, dataset_pred):
+    # ================ Normalization ================
+    scale = Scale()
+    scale.max_x = max(np.max(dataset_obsv[:, :, 0]), np.max(dataset_pred[:, :, 0]))
+    scale.min_x = min(np.min(dataset_obsv[:, :, 0]), np.min(dataset_pred[:, :, 0]))
+    scale.max_y = max(np.max(dataset_obsv[:, :, 1]), np.max(dataset_pred[:, :, 1]))
+    scale.min_y = min(np.min(dataset_obsv[:, :, 1]), np.min(dataset_pred[:, :, 1]))
+    scale.calc_scale(keep_ratio=True)
+    dataset_obsv = scale.normalize(dataset_obsv)
+    dataset_pred = scale.normalize(dataset_pred)
+    return dataset_obsv, dataset_pred
 # def sample_gaussian_2d(mux, muy, sx, sy, corr, nodesPresent, look_up):
 #     '''
 #     Parameters

@@ -17,6 +17,17 @@ class LinearReg:
                                                                                                  self.inputNodesPerSeq)
         xTest, yTest = target[:, :, 0].reshape(-1, self.outputNodesPerSeq), target[:, :, 1].reshape(-1,
                                                                                                     self.outputNodesPerSeq)
+        # lastValue = []
+
+        # for i in range(xTrain.shape[0]):
+        #     lastValue.append((xTrain[i, -1], yTrain[i, -1]))
+        #     xTrain[i, :] -= lastValue[-1][0]
+        #     yTrain[i, :] -= lastValue[-1][1]
+        #
+        # for i in range(xTest.shape[0]):
+        #     xTest[i, :] -= lastValue[i][0]
+        #     yTest[i, :] -= lastValue[i][1]
+
         return xTrain, xTest, yTrain, yTest
     def fit(self, data, target):
         xTrain, xTest, yTrain, yTest = self.prepareData(data, target)
