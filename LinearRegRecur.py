@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
-from helper import RMSE
 class LinearRegRecur:
-    def __init__(self, epoch=1, batchSize=float("inf")):
+    def __init__(self, evaluator, epoch=1, batchSize=float("inf")):
+        self.evaluator = evaluator
         self.epoch = epoch
         self.batchSize = batchSize
         self.model = {}
@@ -86,7 +86,7 @@ class LinearRegRecur:
 
     def evaluate(self, xObsv, xAns, yObsv, yAns):
         xPredict, yPredict = self.predict(xObsv.copy(), yObsv.copy())
-        result = RMSE(xPredict, yPredict, xAns, yAns)
+        result = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
         print("RMSE: {:.3f}\n".format(result))
     def predict(self, xObsv, yObsv):
         N = xObsv.shape[0]

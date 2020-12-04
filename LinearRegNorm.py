@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from helper import RMSE
+
 class LinearRegNorm:
     # normalize with max and min of each row
     def __init__(self):

@@ -1,9 +1,9 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
-from helper import RMSE
 class LinearReg:
-    def __init__(self):
+    def __init__(self, evaluator):
+        self.evaluator = evaluator
         self.model = {}
         self.model["x"] = LinearRegression()
         self.model["y"] = LinearRegression()
@@ -36,7 +36,7 @@ class LinearReg:
         self.model["y"].fit(yTrain, yTest)
         xPredict = self.model["x"].predict(xTrain)
         yPredict = self.model["y"].predict(yTrain)
-        result = RMSE(xPredict, yPredict, xTest, yTest)
+        result = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
         print("RMSE(training set): {:.3f}".format(result))
         #mean_squared_error(y_true, y_pred, multioutput='raw_values')
     def score(self, data, target):
@@ -44,6 +44,6 @@ class LinearReg:
 
         xPredict = self.model["x"].predict(xTrain)
         yPredict = self.model["y"].predict(yTrain)
-        result = RMSE(xPredict, yPredict, xTest, yTest)
+        result = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
         print("RMSE(testing set): {:.3f}".format(result))
 
