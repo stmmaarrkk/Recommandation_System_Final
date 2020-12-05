@@ -15,6 +15,20 @@ class Evaluator:
             Rx /= (self.sx) ** 2
             Ry /= (self.sy) ** 2
         return math.sqrt(Rx + Ry)
+    def FMSE(self, xPredict, yPredict, xTrue, yTrue, denom=True):
+        N = xTrue.shape[0]
+        Rx, Ry = 0, 0
+        for i in range(N):
+            Rx += (xPredict[i, -1] - xTrue[i, -1])**2
+            Ry += (yPredict[i, -1] - yTrue[i, -1])**2
+        Rx /= N
+        Ry /= N
+        if denom:
+            Rx /= (self.sx) ** 2
+            Ry /= (self.sy) ** 2
+        return math.sqrt(Rx + Ry)
+
+            
 # def sample_gaussian_2d(mux, muy, sx, sy, corr, nodesPresent, look_up):
 #     '''
 #     Parameters

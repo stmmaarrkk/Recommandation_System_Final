@@ -11,9 +11,9 @@ class LinearRegNorm:
         self.outputNodesPerSeq = None
     def prepareData(self, data, target):
         self.inputNodesPerSeq, self.outputNodesPerSeq = data.shape[1], target.shape[1]
-        xTrain, yTrain = data[:, :, 0].reshape(-1, self.inputNodesPerSeq), data[:, :, 1].reshape(-1,
+        xTrain, yTrain = data[:, :, 0].copy().reshape(-1, self.inputNodesPerSeq), data[:, :, 1].copy().reshape(-1,
                                                                                                  self.inputNodesPerSeq)
-        xTest, yTest = target[:, :, 0].reshape(-1, self.outputNodesPerSeq), target[:, :, 1].reshape(-1,
+        xTest, yTest = target[:, :, 0].copy().reshape(-1, self.outputNodesPerSeq), target[:, :, 1].copy().reshape(-1,
                                                                                                     self.outputNodesPerSeq)
         # x, xDenomFactor = normalization(np.hstack((xTrain, xTest)))
         # y, yDenomFactor = normalization(np.hstack((yTrain, yTest)))

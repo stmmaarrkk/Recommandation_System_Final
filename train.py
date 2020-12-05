@@ -1,8 +1,8 @@
 import os
 import numpy as np
-from LinearReg import LinearReg
-from LinearRegNorm import LinearRegNorm
-from LinearRegRecur import LinearRegRecur
+from models.LinearReg import LinearReg
+from models.LinearRegRecur import LinearRegRecur
+from models.PolyReg import PolyReg
 from utils.Preprocessing import Scale
 from Evaluator import Evaluator
 
@@ -35,13 +35,18 @@ def main():
         print(data['obsvs'].shape[0])
         print("LinearReg:")
         clf = LinearReg(evaluator)
-        clf.fit(dataset_obsv[:train_size,:,:2].copy(), dataset_pred[:train_size,:,:2].copy())
-        clf.score(dataset_obsv[train_size:,:,:2].copy(), dataset_pred[train_size:,:,:2].copy())
+        clf.fit(dataset_obsv[:train_size,:,:2], dataset_pred[:train_size,:,:2])
+        clf.score(dataset_obsv[train_size:,:,:2], dataset_pred[train_size:,:,:2])
 
-        print("LinearRegRecur:")
-        clfNormRecur = LinearRegRecur(evaluator, epoch=5, batchSize=11)
-        clfNormRecur.fit(dataset_obsv[:train_size,:,:2].copy(), dataset_pred[:train_size,:,:2].copy())
-        clfNormRecur.score(dataset_obsv[train_size:,:,:2].copy(), dataset_pred[train_size:,:,:2].copy())
+        print("PolyReg:")
+        clfPolyReg = PolyReg(evaluator, deg=2)
+        clfPolyReg.fit(dataset_obsv[:train_size, :, :2], dataset_pred[:train_size, :, :2])
+        clfPolyReg.score(dataset_obsv[train_size:, :, :2], dataset_pred[train_size:, :, :2])
+
+        # print("LinearRegRecur:")
+        # clfNormRecur = LinearRegRecur(evaluator, epoch=5, batchSize=11)
+        # clfNormRecur.fit(dataset_obsv[:train_size,:,:2].copy(), dataset_pred[:train_size,:,:2].copy())
+        # clfNormRecur.score(dataset_obsv[train_size:,:,:2].copy(), dataset_pred[train_size:,:,:2].copy())
 
 if __name__ == "__main__":
     main()

@@ -16,9 +16,9 @@ class PolyReg:
         assert data.shape[2] == 2 and target.shape[2] == 2, "The third dim should be 2"
         self.inputNodesPerSeq, self.outputNodesPerSeq = data.shape[1], target.shape[1]
 
-        xObsv, yObsv = data[:, :, 0].reshape(-1, self.inputNodesPerSeq), data[:, :, 1].reshape(-1,
+        xObsv, yObsv = data[:, :, 0].copy().reshape(-1, self.inputNodesPerSeq), data[:, :, 1].copy().reshape(-1,
                                                                                                  self.inputNodesPerSeq)
-        xAns, yAns = target[:, :, 0].reshape(-1, self.outputNodesPerSeq), target[:, :, 1].reshape(-1,
+        xAns, yAns = target[:, :, 0].copy().reshape(-1, self.outputNodesPerSeq), target[:, :, 1].copy().reshape(-1,
                                                                                                     self.outputNodesPerSeq)
 
         ##generate poly data
@@ -39,16 +39,20 @@ class PolyReg:
         xPredict = self.model["x"].predict(xObsv)
         yPredict = self.model["y"].predict(yObsv)
 
-        result = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
-        print("RMSE(training set): {:.3f}".format(result))
+        rmse = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
+        fmse = self.evaluator.FMSE(xPredict, yPredict, xAns, yAns)
+        print("RMSE(testing set): {:.3f}".format(rmse))
+        print("FMSE(testing set): {:.3f}".format(fmse))
         #mean_squared_error(y_true, y_pred, multioutput='raw_values')
     def score(self, data, target):
         xObsv, xAns, yObsv, yAns = self.prepareData(data, target)
 
         xPredict = self.model["x"].predict(xObsv)
         yPredict = self.model["y"].predict(yObsv)
-        result = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
-        print("RMSE(testing set): {:.3f}".format(result))
+        rmse = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
+        fmse = self.evaluator.FMSE(xPredict, yPredict, xAns, yAns)
+        print("RMSE(testing set): {:.3f}".format(rmse))
+        print("FMSE(testing set): {:.3f}".format(fmse))
     def getIndex(self):
         count = 0
         q = deque()

@@ -13,9 +13,9 @@ class LinearReg:
         assert data.shape[2] == 2 and target.shape[2] == 2, "The third dim should be 2"
         self.inputNodesPerSeq, self.outputNodesPerSeq = data.shape[1], target.shape[1]
 
-        xTrain, yTrain = data[:, :, 0].reshape(-1, self.inputNodesPerSeq), data[:, :, 1].reshape(-1,
+        xTrain, yTrain = data[:, :, 0].copy().reshape(-1, self.inputNodesPerSeq), data[:, :, 1].copy().reshape(-1,
                                                                                                  self.inputNodesPerSeq)
-        xTest, yTest = target[:, :, 0].reshape(-1, self.outputNodesPerSeq), target[:, :, 1].reshape(-1,
+        xTest, yTest = target[:, :, 0].copy().reshape(-1, self.outputNodesPerSeq), target[:, :, 1].copy().reshape(-1,
                                                                                                     self.outputNodesPerSeq)
         # lastValue = []
 
@@ -36,14 +36,18 @@ class LinearReg:
         self.model["y"].fit(yTrain, yTest)
         xPredict = self.model["x"].predict(xTrain)
         yPredict = self.model["y"].predict(yTrain)
-        result = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
-        print("RMSE(training set): {:.3f}".format(result))
+        rmse = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
+        fmse = self.evaluator.FMSE(xPredict, yPredict, xTest, yTest)
+        print("RMSE(training set): {:.3f}".format(rmse))
+        print("FMSE(training set): {:.3f}".format(fmse))
         #mean_squared_error(y_true, y_pred, multioutput='raw_values')
     def score(self, data, target):
         xTrain, xTest, yTrain, yTest = self.prepareData(data, target)
 
         xPredict = self.model["x"].predict(xTrain)
         yPredict = self.model["y"].predict(yTrain)
-        result = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
-        print("RMSE(testing set): {:.3f}".format(result))
+        rmse = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
+        fmse = self.evaluator.FMSE(xPredict, yPredict, xTest, yTest)
+        print("RMSE(testing set): {:.3f}".format(rmse))
+        print("FMSE(testing set): {:.3f}".format(fmse))
 

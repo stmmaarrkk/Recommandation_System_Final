@@ -15,9 +15,9 @@ class LinearRegRecur:
         assert data.shape[2] == 2 and target.shape[2] == 2, "The third dim should be 2"
         self.inputNodesPerSeq, self.outputNodesPerSeq = data.shape[1], target.shape[1]
 
-        xObsv, yObsv = data[:, :, 0].reshape(-1, self.inputNodesPerSeq), data[:, :, 1].reshape(-1,
+        xObsv, yObsv = data[:, :, 0].copy().reshape(-1, self.inputNodesPerSeq), data[:, :, 1].copy().reshape(-1,
                                                                                                  self.inputNodesPerSeq)
-        xAns, yAns = target[:, :, 0].reshape(-1, self.outputNodesPerSeq), target[:, :, 1].reshape(-1,
+        xAns, yAns = target[:, :, 0].copy().reshape(-1, self.outputNodesPerSeq), target[:, :, 1].copy().reshape(-1,
                                                                                                     self.outputNodesPerSeq)
         # lastValue = []
 
@@ -78,16 +78,22 @@ class LinearRegRecur:
 
 
             ##evaluate
+
             self.evaluate(xObsv, xAns, yObsv, yAns)
 
     def score(self, data, target):
         xObsv, xAns, yObsv, yAns = self.prepareData(data, target)
+
+        print("testing set")
         self.evaluate(xObsv, xAns, yObsv, yAns)
 
     def evaluate(self, xObsv, xAns, yObsv, yAns):
         xPredict, yPredict = self.predict(xObsv.copy(), yObsv.copy())
-        result = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
-        print("RMSE: {:.3f}\n".format(result))
+
+        rmse = self.evaluator.RMSE(xPredict, yPredict, xAns, yAns)
+        fmse = self.evaluator.FMSE(xPredict, yPredict, xAns, yAns)
+        print("RMSE: {:.3f}".format(rmse))
+        print("FMSE: {:.3f}".format(fmse))
     def predict(self, xObsv, yObsv):
         N = xObsv.shape[0]
         xPredict = np.zeros((N, self.outputNodesPerSeq), dtype=np.float)
