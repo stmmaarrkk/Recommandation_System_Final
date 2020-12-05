@@ -1,14 +1,12 @@
 import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error
-from helper import RMSE
 import lightgbm as lgb
 from sklearn.multioutput import MultiOutputRegressor
 import math
 
 class LightGBM:
-    def __init__(self):
-        
+    def __init__(self, evaluator):
+        self.evaluator = evaluator
         self.model = {}
         hyper_params = {
             'boosting_type': 'gbdt',
@@ -52,8 +50,8 @@ class LightGBM:
             'verbose' : 0
         }
 
-        self.model["x"] = MultiOutputRegressor(lgb.LGBMRegressor(**rf_params))
-        self.model["y"] = MultiOutputRegressor(lgb.LGBMRegressor(**rf_params))
+        self.model["x"] = MultiOutputRegressor(lgb.LGBMRegressor(**params))
+        self.model["y"] = MultiOutputRegressor(lgb.LGBMRegressor(**params))
         self.inputNodesPerSeq = None
         self.outputNodesPerSeq= None
 
@@ -75,7 +73,7 @@ class LightGBM:
 
         xPredict = self.model["x"].predict(xTrain)
         yPredict = self.model["y"].predict(yTrain)
-        result = RMSE(xPredict, yPredict, xTest, yTest)
+        result = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
         print("RMSE(training set): {:.3f}".format(result))
     
     def score(self, data, target):
@@ -83,6 +81,6 @@ class LightGBM:
 
         xPredict = self.model["x"].predict(xTrain)
         yPredict = self.model["y"].predict(yTrain)
-        result = RMSE(xPredict, yPredict, xTest, yTest)
+        result = self.evaluator.RMSE(xPredict, yPredict, xTest, yTest)
         print("RMSE(testing set): {:.3f}".format(result))
         #mean_squared_error(y_true, y_pred, multioutput='raw_values')
