@@ -3,6 +3,7 @@ import numpy as np
 from LinearReg import LinearReg
 from LinearRegNorm import LinearRegNorm
 from LinearRegRecur import LinearRegRecur
+from PolyReg import PolyReg
 from utils.Preprocessing import Scale
 from Evaluator import Evaluator
 
@@ -31,15 +32,23 @@ def main():
     # 7/8 of the batches in training phase to be used for training, 1/8 for validation
     train_size = data['obsvs'].shape[0] * 4 // 5
 
+
     print("LinearReg:")
     clf = LinearReg(evaluator)
     clf.fit(dataset_obsv[:train_size].copy(), dataset_pred[:train_size].copy())
     clf.score(dataset_obsv[train_size:].copy(), dataset_pred[train_size:].copy())
 
+    print("PolyReg:")
+    clf = PolyReg(evaluator, deg=2)
+    clf.fit(dataset_obsv[:train_size].copy(), dataset_pred[:train_size].copy())
+    clf.score(dataset_obsv[train_size:].copy(), dataset_pred[train_size:].copy())
+
     print("LinearRegRecur:")
-    clfNormRecur = LinearRegRecur(evaluator, 5, 13)
+    clfNormRecur = LinearRegRecur(evaluator, 5, 5)
     clfNormRecur.fit(dataset_obsv[:train_size].copy(), dataset_pred[:train_size].copy())
     clfNormRecur.score(dataset_obsv[train_size:].copy(), dataset_pred[train_size:].copy())
+
+
 
 if __name__ == "__main__":
     main()
